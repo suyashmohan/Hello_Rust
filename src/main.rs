@@ -1,28 +1,5 @@
-#[derive(Debug)]
-enum Kind {
-    NormalUser,
-    TeamLead(u32),
-    Manager(String),
-}
-
-#[derive(Debug)]
-struct User {
-    name: String,
-    email: String,
-    age: u32,
-    kind: Kind
-}
-
-fn match_test(user: &User) {
-    match &user.kind {
-        Kind::NormalUser => println!("NormalUser"),
-        Kind::TeamLead(years) => println!("Team lead with {} years exp", years),
-        Kind::Manager(dept) => println!("Manager of {}", dept),
-    }
-    if let Kind::TeamLead(years) = &user.kind {
-        println!("Extra check {}", years);
-    }
-}
+mod user;
+use user::*;
 
 fn main() {
     let u1 = User {
