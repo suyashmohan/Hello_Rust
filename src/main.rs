@@ -1,32 +1,43 @@
-use rand::Rng;
-use std::cmp::Ordering;
-use std::io;
+#[derive(Debug)]
+enum Kind {
+    NormalUser,
+    TeamLead(u32),
+    Manager(String),
+}
+
+#[derive(Debug)]
+struct User {
+    name: String,
+    email: String,
+    age: u32,
+    kind: Kind
+}
+
+fn match_test(user: &User) {
+    match &user.kind {
+        Kind::NormalUser => println!("NormalUser"),
+        Kind::TeamLead(years) => println!("Team lead with {} years exp", years),
+        Kind::Manager(dept) => println!("Manager of {}", dept),
+    }
+    if let Kind::TeamLead(years) = &user.kind {
+        println!("Extra check {}", years);
+    }
+}
 
 fn main() {
-    println!("Guess the number!");
-    let secret_number = rand::thread_rng().gen_range(1, 101);
-    
-    loop {
-        println!("Please input your guess.");
-        let mut guess = String::new();
-        io::stdin()
-            .read_line(&mut guess)
-            .expect("Failed to read line.");
-        
-        let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue,
-        };
-
-        println!("You guessed: {}", guess);
-
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
-            Ordering::Equal => {
-                println!("You win!");
-                break;
-            }
-        }
-    }
+    let u1 = User {
+        name: String::from("Trump"),
+        email: String::from("trump@usa.com"),
+        age: 60,
+        kind: Kind::TeamLead(10)
+    };
+    println!("{:?}", u1);
+    let u2 = User {
+        name: String::from("Not Trump"),
+        kind: Kind::Manager(String::from("Office")),
+        email: u1.email.clone(),
+        ..u1
+    };
+    println!("{:?}", u2);
+    match_test(&u1);
 }
